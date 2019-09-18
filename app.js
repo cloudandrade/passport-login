@@ -4,6 +4,10 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const expressLayouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
+const passport = require("passport");
+
+//passport config
+require("./config/passport")(passport);
 
 //EXPRESS
 const app = express();
@@ -24,6 +28,10 @@ app.use(
   })
 );
 
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 //connect flash
 app.use(flash());
 
@@ -31,6 +39,7 @@ app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
   next();
 });
 
